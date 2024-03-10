@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { afterUpdate, tick } from 'svelte';
+
 	import Send from 'lucide-svelte/icons/send';
 	import winkNLP from 'wink-nlp';
 	import model from 'wink-eng-lite-web-model';
@@ -7,18 +9,21 @@
 
 	import { Textarea } from '$lib/components/ui/textarea';
 
-	import type { HTMLTextareaAttributes } from 'svelte/elements';
+	import type { HTMLTextareaAttributes, HTMLLiAttributes } from 'svelte/elements';
 	import Badge from '@/components/ui/badge/badge.svelte';
 	import Input from '@/components/ui/input/input.svelte';
 	import ScrollArea from '@/components/ui/scroll-area/scroll-area.svelte';
 	import Button from '@/components/ui/button/button.svelte';
 	import CalendarNextButton from '@/components/ui/calendar/calendar-next-button.svelte';
+	import JournalEntry from '@/components/ui/JournalEntry.svelte';
 
 	const nlp = winkNLP(model);
 	const its = nlp.its;
 	const as = nlp.as;
 
 	let value: string;
+	let journal: HTMLUListElement;
+	let lastElement: HTMLUListElement;
 	let textArea: HTMLTextareaAttributes;
 
 	const monthColor = {
@@ -50,7 +55,10 @@
 		$list.push(doc.out(its.markedUpText));
 		$list = $list;
 		value = ''.trim();
+
+		lastElement.scrollIntoView(true);
 	}
+
 	function sendItem(event: KeyboardEvent) {
 		if (value === '' || value === undefined) return;
 		if (event.key === 'Enter') {
@@ -66,6 +74,21 @@
 	function resetStore() {
 		$list = [];
 	}
+
+	// Either afterUpdate()
+	afterUpdate(() => {
+		console.log('afterUpdate');
+		if ($list) scrollToBottom(journal);
+	});
+
+	$: if ($list && journal) {
+		console.log('tick');
+		scrollToBottom(journal);
+	}
+
+	const scrollToBottom = (node: HTMLUListElement) => {
+		node.scroll({ top: node.scrollHeight, behavior: 'smooth' });
+	};
 </script>
 
 <head>
@@ -73,9 +96,12 @@
 </head>
 
 <main class="mx-auto my-5 w-[90%] md:my-20 md:w-1/2">
-	<ul class="my-10 flex h-[600px] list-inside list-disc flex-col space-y-2 overflow-y-scroll">
-		{#each $list as item}
-			<li class="list-item">{@html item}</li>
+	<ul
+		bind:this={journal}
+		class="my-10 flex h-[600px] list-inside list-disc flex-col space-y-2 overflow-y-scroll"
+	>
+		{#each $list as item, i}
+			<JournalEntry last={i === items.length} title={item} date={new Date()} />
 		{/each}
 	</ul>
 	<div class="sticky bottom-1 w-full md:bottom-10">
@@ -86,6 +112,6 @@
 			</Button>
 		</div>
 
-		<Button variant="destructive" on:click={resetStore}>Reset</Button>
+		<Button variant="destructive" class="font-bold" on:click={resetStore}>Reset</Button>
 	</div>
 </main>
