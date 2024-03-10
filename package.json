@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite dev",
+    "host": "vite dev --host",
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -41,7 +42,10 @@
     "clsx": "^2.1.0",
     "lucide-svelte": "^0.354.0",
     "mode-watcher": "^0.2.2",
+    "svelte-persisted-store": "^0.9.1",
     "tailwind-merge": "^2.2.1",
-    "tailwind-variants": "^0.2.0"
+    "tailwind-variants": "^0.2.0",
+    "wink-eng-lite-web-model": "^1.5.2",
+    "wink-nlp": "^1.14.3"
   }
 }
