@@ -55,7 +55,7 @@ const config = {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			fontFamily: {
-				sans: ['Plein', ...fontFamily.sans]
+				sans: ['AT Name Sans Variable', 'Plein', ...fontFamily.sans]
 			}
 		}
 	}

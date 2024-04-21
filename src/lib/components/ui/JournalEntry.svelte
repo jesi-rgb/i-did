@@ -1,15 +1,14 @@
 <script lang="ts">
 	export let title: string;
 	export let date: Date;
-	export let last: boolean;
 </script>
 
-<main class="my-5">
-	<div class="opacity-60">
-		{date.toLocaleDateString()} – <span class="text-xs">{date.toLocaleTimeString()}</span>
-	</div>
-
-	<div class="text-xl font-semibold">
+<li class="flex flex-col rounded-xl border-b px-1 py-2">
+	<div class="text-xl">
 		{@html title}
 	</div>
-</main>
+
+	<div class="self-end tabular-nums opacity-60">
+		{date.toLocaleDateString()} – <span class="text-xs">{date.toLocaleTimeString()}</span>
+	</div>
+</li>
